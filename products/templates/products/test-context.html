@@ -1,21 +1,21 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>{{ title }}</title>#}
-{#</head>#}
-{#<body>#}
-{#<h1>{{ header }}</h1>#}
-{#<p>{{ username }} Тестовый текст {{ title }}</p>#}
-{##}
-{#{% if products %}#}
-{#    <h2>Продукты:</h2>#}
-{#    {% for product in products %}#}
-{#        <h3>{{ product.name }}</h3>#}
-{#        <p>{{ product.price }} рублей</p>#}
-{#    {% endfor %}#}
-{#{% else %}#}
-{#    <h2>Продуктов нет</h2>#}
-{#{% endif %}#}
-{#</body>#}
-{#</html>#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} {{ title }} {% now "jS F Y H:i" %}</title>
+</head>
+<body>
+<h1>{{ header }} {% now "jS \o\f F" %} It is {% now "SHORT_DATE_FORMAT" %} </h1>
+<p>{{ username }} Тестовый текст {{ title }}</p>
+
+{% if products %}
+    <h2>Продукты:</h2>
+    {% for product in products %}
+        <h3>{{ product.fields.name }}</h3>
+        <p>{{ product.fields.price }} рублей</p>
+    {% endfor %}
+{% else %}
+    <h2>Продуктов нет</h2>
+{% endif %}
+</body>
+</html>
