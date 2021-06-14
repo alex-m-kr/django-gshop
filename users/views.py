@@ -49,8 +49,24 @@ def profile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
-    context = {'title': 'GeekShop - Личный кабинет', 'form': form,
-               'baskets': Basket.objects.filter(user=request.user), }
+
+    # total_quantity = 0
+    # total_sum = 0
+    baskets = Basket.objects.filter(user=request.user)
+    # for element in baskets:
+        # total_quantity += element.quantity
+        # total_sum += element.sum()
+    # total_quantity = sum([el.quantity for el in baskets])
+    # total_sum = sum([el.sum() for el in baskets])
+    # total_quantity = sum((el.quantity for el in baskets))
+    # total_sum = sum((el.sum() for el in baskets))
+
+    context = {
+        'title': 'GeekShop - Личный кабинет',
+        'form': form,
+        'baskets': Basket.objects.filter(user=request.user),
+        # 'total_quantity': total_quantity, 'total_sum': total_sum,
+    }
     return render(request, 'users/profile.html', context)
 
 
