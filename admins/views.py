@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 
 from users.models import User
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
@@ -12,25 +14,38 @@ def index(request):
     return render(request, 'admins/admin.html')
 
 
-# Здесь будет CRUD
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users(request):
-    context = {'users': User.objects.all(),
-               'title': 'GeekShop - АДМИН | Пользователи'}
-    return render(request, 'admins/admin-users-read.html', context)
+class UserListView(ListView):
+    model = User
+    template_name = 'admins/admin-users-read.html'
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super(UserListView, self).get_context_data(**kwargs)
+    #     context['title'] = 'GeekShop - Админ | Пользователи'
+    #     return context
+    #
+    # @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_create(request):
-    if request.method == 'POST':
-        form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_users'))
-    else:
-        form = UserAdminRegisterForm()
-    context = {'title': 'GeekShop - АДМИН | Регистрация', 'form': form}
-    return render(request, 'admins/admin-users-create.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users_create(request):
+#     if request.method == 'POST':
+#         form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect(reverse('admins:admin_users'))
+#     else:
+#         form = UserAdminRegisterForm()
+#     context = {'title': 'GeekShop - АДМИН | Регистрация', 'form': form}
+#     return render(request, 'admins/admin-users-create.html', context)
+
+
+class UserCreateView(CreateView):
+    model = User
+    template_name = 'admins/admin-users-create.html'
+    form_class = UserAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_users')
 
 
 @user_passes_test(lambda u: u.is_superuser)
